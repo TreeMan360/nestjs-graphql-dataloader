@@ -82,9 +82,9 @@ Add these to your modules providers as usual. You will most likely want to inclu
 
 ```javascript
 interface IOrderedNestDataLoaderOptions<ID, Type> {
-  propertyKey?: string;
-  query: (keys: readonly ID[]) => Promise<Type[]>;
-  typeName?: string;
+  propertyKey?: string
+  query: (keys: readonly ID[]) => Promise<Type[]>
+  typeName?: string
 }
 ```
 
