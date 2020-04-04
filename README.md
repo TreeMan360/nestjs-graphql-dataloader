@@ -54,7 +54,7 @@ import { DataLoaderInterceptor } from 'nestjs-graphql-dataloader'
 
 ### 2. Build @Loaders for each @ObjectType
 
-Using the provided ```OrderedNestDataLoader<KeyType, EntityType>``` we can easily create a DataLoader for your types. Here is an example:
+Using the provided template method, ```OrderedNestDataLoader<KeyType, EntityType>```, you can easily implement DataLoaders for your types. Here is an example:
 
 ```
 import { Injectable } from '@nestjs/common'
@@ -86,7 +86,7 @@ interface IOrderedNestDataLoaderOptions<ID, Type> {
 }
 ```
 
-Since 99% of the time a ```propertyKey``` is ```'id'``` this is the default if not specified. 
+Since the majority of the time a ```propertyKey``` is ```'id'``` this is the default if not specified. 
 
 The ```typeName``` for the above example is automatically assigned ```'Location'``` which is derived from the class name, this is just used for logging errors.
 
