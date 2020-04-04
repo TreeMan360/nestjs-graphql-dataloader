@@ -70,15 +70,23 @@ export class DataLoaderInterceptor implements NestInterceptor {
  * The decorator to be used within your graphql method.
  */
 export const Loader = createParamDecorator(
-  (data: unknown, context: ExecutionContext) => {
+  // tslint:disable-next-line: ban-types
+  (data: string | Function, context: ExecutionContext) => {
+    const name = typeof data === "string" ? data : data?.name;
+    if (!name) {
+      throw new InternalServerErrorException(
+        `Invalid name provider to @Loader ('${name}')`
+      );
+    }
+
     const ctx = GqlExecutionContext.create(context).getContext();
-    if (ctx[NEST_LOADER_CONTEXT_KEY] === undefined) {
+    if (!name || !ctx[NEST_LOADER_CONTEXT_KEY]) {
       throw new InternalServerErrorException(
         `You should provide interceptor ${DataLoaderInterceptor.name} globally with ${APP_INTERCEPTOR}`
       );
     }
 
-    return ctx[NEST_LOADER_CONTEXT_KEY](data);
+    return ctx[NEST_LOADER_CONTEXT_KEY](name);
   }
 );
 

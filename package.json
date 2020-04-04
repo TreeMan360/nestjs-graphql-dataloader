@@ -1,12 +1,13 @@
 {
   "name": "nestjs-graphql-dataloader",
-  "version": "0.1.19",
+  "version": "0.1.21",
   "private": false,
   "description": "NestJS GraphQL Dataloader",
   "main": "dist/index.js",
   "types": "index.d.ts",
   "author": "Mark Everett",
   "license": "MIT",
+  "repository": "https://github.com/TreeMan360/nestjs-graphql-dataloader",
   "scripts": {
     "build": "rm -rf ./dist && tsc -p tsconfig.json"
   },
