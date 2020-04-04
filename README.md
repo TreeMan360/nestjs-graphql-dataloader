@@ -24,7 +24,7 @@ yarn add nestjs-graphql-dataloader
 First, register a NestJS interceptor in your applications root module(s) providers configuration. This can actually be placed in any of your modules and it will be available anywhere but I would recommend your root module(s). It only needs to be defined once.
 
 Add: 
-```  
+```javascript
 {
   provide: APP_INTERCEPTOR,
   useClass: DataLoaderInterceptor,
@@ -32,7 +32,7 @@ Add:
 ```
     
 For example:
-```
+```javascript
 import { DataLoaderInterceptor } from 'nestjs-graphql-dataloader'
 ...
 
@@ -56,7 +56,7 @@ import { DataLoaderInterceptor } from 'nestjs-graphql-dataloader'
 
 Using the provided template method, ```OrderedNestDataLoader<KeyType, EntityType>```, you can easily implement DataLoaders for your types. Here is an example:
 
-```
+```javascript
 import { Injectable } from '@nestjs/common'
 import { OrderedNestDataLoader } from 'nestjs-graphql-dataloader'
 import { Location } from '../core/location.entity'
@@ -78,7 +78,7 @@ Add these to your modules providers as usual. You will most likely want to inclu
 
 ```getOptions``` takes a single ```options``` argument which has the following interface:
 
-```
+```javascript
 interface IOrderedNestDataLoaderOptions<ID, Type> {
   propertyKey?: string;
   query: (keys: readonly ID[]) => Promise<Type[]>;
@@ -97,7 +97,7 @@ The query is the equivalent of a ```repository.findByIds(ids)``` operation. It s
 
 To then use the resolver it just needs to be injected into the resolvers field resolver method. Here is an example:
 
-```
+```javascript
 import DataLoader from 'dataloader'
 ...
 
