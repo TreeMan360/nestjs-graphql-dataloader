@@ -63,15 +63,16 @@ import { Location } from '../core/location.entity'
 import { LocationService } from '../core/location.service'
 
 @Injectable()
-export class LocationLoader extends OrderedDataLoader<string, Location> {
+export class LocationLoader extends OrderedNestDataLoader<Location['id'], Location> {
   constructor(private readonly locationService: LocationService) {
     super()
   }
 
   protected getOptions = () => ({
-    query: (keys: string[]) => this.locationService.findByIds(keys),
+    query: (keys: Array<Location['id']>) => this.locationService.findByIds(keys),
   })
 }
+
 ```
 
 Add these to your modules providers as usual. You will most likely want to include it in your modules exports so the loader can be imported by resolvers in other modules.
