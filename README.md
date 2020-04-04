@@ -74,6 +74,7 @@ export class LocationLoader extends OrderedNestDataLoader<Location['id'], Locati
 }
 
 ```
+*Note: in these examples the usage of ```Location['id']``` is referring to the type of the ```location.id property```, which in this case is ```string```. It would be perfectly acceptable to declare the generic type argument as ```string``` rather than ```Location['id']```.*
 
 Add these to your modules providers as usual. You will most likely want to include it in your modules exports so the loader can be imported by resolvers in other modules.
 
