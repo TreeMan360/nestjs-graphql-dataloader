@@ -93,7 +93,7 @@ The ```typeName``` for the above example is automatically assigned ```'Location'
 The query is the equivalent of a ```repository.findByIds(ids)``` operation. It should return the **same number of elements** as requested. The **order does not matter** as the base loader implementation takes care of this.
 
 
-### 3. Use the @Loader in @ResolveField()
+### 3. Use the @Loader in @ResolveField
 
 To then use the resolver it just needs to be injected into the resolvers field resolver method. Here is an example:
 
