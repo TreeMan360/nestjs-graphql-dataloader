@@ -104,7 +104,7 @@ import DataLoader from 'dataloader'
 @ResolveField(returns => [Location])
 public async locations(
   @Parent() company: Company,
-  @Loader(LocationLoader.name)
+  @Loader(LocationLoader)
   locationLoader: DataLoader<Location['id'], Location>,
 ) {
   return locationLoader.loadMany(company.locationIds)
