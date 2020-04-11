@@ -63,16 +63,18 @@ import { Location } from '../core/location.entity'
 import { LocationService } from '../core/location.service'
 
 @Injectable()
-export class LocationLoader extends OrderedDataLoader<string, Location> {
+export class LocationLoader extends OrderedNestDataLoader<Location['id'], Location> {
   constructor(private readonly locationService: LocationService) {
     super()
   }
 
   protected getOptions = () => ({
-    query: (keys: string[]) => this.locationService.findByIds(keys),
+    query: (keys: Array<Location['id']>) => this.locationService.findByIds(keys),
   })
 }
+
 ```
+> *Note: In these examples the usage of ```Location['id']``` is referring to the type of the ```location.id property```, which in this case is ```string```. It would be perfectly acceptable to declare the generic type argument as ```string``` rather than ```Location['id']```.*
 
 Add these to your modules providers as usual. You will most likely want to include it in your modules exports so the loader can be imported by resolvers in other modules.
 
@@ -80,9 +82,9 @@ Add these to your modules providers as usual. You will most likely want to inclu
 
 ```javascript
 interface IOrderedNestDataLoaderOptions<ID, Type> {
-  propertyKey?: string;
-  query: (keys: readonly ID[]) => Promise<Type[]>;
-  typeName?: string;
+  propertyKey?: string
+  query: (keys: readonly ID[]) => Promise<Type[]>
+  typeName?: string
 }
 ```
 
@@ -104,7 +106,7 @@ import DataLoader from 'dataloader'
 @ResolveField(returns => [Location])
 public async locations(
   @Parent() company: Company,
-  @Loader(LocationLoader.name)
+  @Loader(LocationLoader)
   locationLoader: DataLoader<Location['id'], Location>,
 ) {
   return locationLoader.loadMany(company.locationIds)
