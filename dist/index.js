@@ -33,19 +33,22 @@ let DataLoaderInterceptor = class DataLoaderInterceptor {
     intercept(context, next) {
         const ctx = graphql_1.GqlExecutionContext.create(context).getContext();
         if (ctx[NEST_LOADER_CONTEXT_KEY] === undefined) {
-            ctx[NEST_LOADER_CONTEXT_KEY] = (type) => __awaiter(this, void 0, void 0, function* () {
-                if (ctx[type] === undefined) {
-                    try {
-                        ctx[type] = this.moduleRef
-                            .get(type, { strict: false })
-                            .generateDataLoader();
+            ctx[NEST_LOADER_CONTEXT_KEY] = {
+                contextId: core_1.ContextIdFactory.create(),
+                getLoader: (type) => {
+                    if (ctx[type] === undefined) {
+                        try {
+                            ctx[type] = (() => __awaiter(this, void 0, void 0, function* () {
+                                return (yield this.moduleRef.resolve(type, ctx[NEST_LOADER_CONTEXT_KEY].contextId, { strict: false })).generateDataLoader();
+                            }))();
+                        }
+                        catch (e) {
+                            throw new common_1.InternalServerErrorException(`The loader ${type} is not provided` + e);
+                        }
                     }
-                    catch (e) {
-                        throw new common_1.InternalServerErrorException(`The loader ${type} is not provided` + e);
-                    }
-                }
-                return ctx[type];
-            });
+                    return ctx[type];
+                },
+            };
         }
         return next.handle();
     }
@@ -56,17 +59,21 @@ DataLoaderInterceptor = __decorate([
 ], DataLoaderInterceptor);
 exports.DataLoaderInterceptor = DataLoaderInterceptor;
 exports.Loader = common_1.createParamDecorator((data, context) => {
+    const name = typeof data === "string" ? data : data === null || data === void 0 ? void 0 : data.name;
+    if (!name) {
+        throw new common_1.InternalServerErrorException(`Invalid name provider to @Loader ('${name}')`);
+    }
     const ctx = graphql_1.GqlExecutionContext.create(context).getContext();
-    if (ctx[NEST_LOADER_CONTEXT_KEY] === undefined) {
+    if (!name || !ctx[NEST_LOADER_CONTEXT_KEY]) {
         throw new common_1.InternalServerErrorException(`You should provide interceptor ${DataLoaderInterceptor.name} globally with ${core_1.APP_INTERCEPTOR}`);
     }
-    return ctx[NEST_LOADER_CONTEXT_KEY](data);
+    return ctx[NEST_LOADER_CONTEXT_KEY].getLoader(name);
 });
-exports.ensureOrder = options => {
-    const { docs, keys, prop, error = key => `Document does not exist (${key})` } = options;
+exports.ensureOrder = (options) => {
+    const { docs, keys, prop, error = (key) => `Document does not exist (${key})`, } = options;
     const docsMap = new Map();
-    docs.forEach(doc => docsMap.set(doc[prop], doc));
-    return keys.map(key => {
+    docs.forEach((doc) => docsMap.set(doc[prop], doc));
+    return keys.map((key) => {
         return (docsMap.get(key) ||
             new Error(typeof error === "function" ? error(key) : error));
     });
@@ -82,9 +89,9 @@ class OrderedNestDataLoader {
                 docs: yield options.query(keys),
                 keys,
                 prop: options.propertyKey || "id",
-                error: keyValue => `${options.typeName || defaultTypeName} does not exist (${keyValue})`
+                error: (keyValue) => `${options.typeName || defaultTypeName} does not exist (${keyValue})`,
             });
-        }));
+        }), options.dataloaderConfig);
     }
 }
 exports.OrderedNestDataLoader = OrderedNestDataLoader;

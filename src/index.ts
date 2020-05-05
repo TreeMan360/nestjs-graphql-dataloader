@@ -122,6 +122,7 @@ interface IOrderedNestDataLoaderOptions<ID, Type> {
   propertyKey?: string;
   query: (keys: readonly ID[]) => Promise<Type[]>;
   typeName?: string;
+  dataloaderConfig?: DataLoader.Options<ID, Type>;
 }
 
 // tslint:disable-next-line: max-classes-per-file
@@ -145,6 +146,6 @@ export abstract class OrderedNestDataLoader<ID, Type>
         error: (keyValue) =>
           `${options.typeName || defaultTypeName} does not exist (${keyValue})`,
       });
-    });
+    }, options.dataloaderConfig);
   }
 }
