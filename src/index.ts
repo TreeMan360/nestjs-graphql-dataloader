@@ -42,6 +42,7 @@ export class DataLoaderInterceptor implements NestInterceptor {
     next: CallHandler
   ): Observable<any> {
     const ctx = GqlExecutionContext.create(context).getContext();
+    if (!ctx) return next.handle();
 
     if (ctx[NEST_LOADER_CONTEXT_KEY] === undefined) {
       ctx[NEST_LOADER_CONTEXT_KEY] = {
