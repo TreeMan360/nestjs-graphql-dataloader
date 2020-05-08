@@ -32,6 +32,8 @@ let DataLoaderInterceptor = class DataLoaderInterceptor {
     }
     intercept(context, next) {
         const ctx = graphql_1.GqlExecutionContext.create(context).getContext();
+        if (!ctx)
+            return next.handle();
         if (ctx[NEST_LOADER_CONTEXT_KEY] === undefined) {
             ctx[NEST_LOADER_CONTEXT_KEY] = {
                 contextId: core_1.ContextIdFactory.create(),
