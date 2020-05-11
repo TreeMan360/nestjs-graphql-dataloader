@@ -1,6 +1,6 @@
 {
   "name": "nestjs-graphql-dataloader",
-  "version": "0.1.25",
+  "version": "0.1.26",
   "private": false,
   "description": "NestJS GraphQL Dataloader",
   "main": "dist/index.js",
