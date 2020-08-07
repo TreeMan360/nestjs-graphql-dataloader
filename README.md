@@ -62,7 +62,7 @@ import { OrderedNestDataLoader } from 'nestjs-graphql-dataloader'
 import { Location } from '../core/location.entity'
 import { LocationService } from '../core/location.service'
 
-@Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class LocationLoader extends OrderedNestDataLoader<Location['id'], Location> {
   constructor(private readonly locationService: LocationService) {
     super()
