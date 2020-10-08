@@ -1,5 +1,7 @@
 # nestjs-graphql-dataloader
 
+![Node.js CI](https://github.com/TreeMan360/nestjs-graphql-dataloader/workflows/Node.js%20CI/badge.svg)
+
 Based on https://github.com/krislefeber/nestjs-dataloader this small library assists in adding https://github.com/graphql/dataloader to a NestJS project.
 
 This package also ensures that the ids are mapped to the dataloader in the correct sequence automatically and provides a helpful base class to simplify dataloader creation.
@@ -23,14 +25,14 @@ yarn add nestjs-graphql-dataloader
 ### 1. Register DataLoaderInterceptor
 First, register a NestJS interceptor in your applications root module(s) providers configuration. This can actually be placed in any of your modules and it will be available anywhere but I would recommend your root module(s). It only needs to be defined once.
 
-Add: 
+Add:
 ```javascript
 {
   provide: APP_INTERCEPTOR,
   useClass: DataLoaderInterceptor,
 }
 ```
-    
+
 For example:
 ```javascript
 import { DataLoaderInterceptor } from 'nestjs-graphql-dataloader'
@@ -43,7 +45,7 @@ import { DataLoaderInterceptor } from 'nestjs-graphql-dataloader'
       useClass: DataLoaderInterceptor,
     },
   ],
-  
+
   ...
   imports: [
     RavenModule,
@@ -88,7 +90,7 @@ interface IOrderedNestDataLoaderOptions<ID, Type> {
 }
 ```
 
-Since the majority of the time a ```propertyKey``` is ```'id'``` this is the default if not specified. 
+Since the majority of the time a ```propertyKey``` is ```'id'``` this is the default if not specified.
 
 The ```typeName``` for the above example is automatically assigned ```'Location'``` which is derived from the class name, this is just used for logging errors.
 
