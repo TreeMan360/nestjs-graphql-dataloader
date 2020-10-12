@@ -1,16 +1,16 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "moduleResolution": "node",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es6",
+    "allowSyntheticDefaultImports": true,
+    "target": "es2017",
     "sourceMap": true,
-    "outDir": "dist",
-    "esModuleInterop": true,
-    "baseUrl": "./"
-  },
-  "exclude": ["node_modules", "dist", "*test.ts"]
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "esModuleInterop": true
+  }
 }
