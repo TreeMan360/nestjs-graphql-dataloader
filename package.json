@@ -11,7 +11,8 @@
     "build": "rm -rf ./dist && tsc -p tsconfig.json",
     "prepare": "tsc -p tsconfig.json",
     "prestart": "rm -rf ./example/dist",
-    "start": "nest start example/src/main.ts --watch --path=example/tsconfig.json"
+    "start": "nest start example/src/main.ts --watch --path=example/tsconfig.json",
+    "test": "jest"
   },
   "keywords": [
     "nestjs",
@@ -36,29 +37,43 @@
     "@nestjs/platform-express": "^7.0.0",
     "@nestjs/schematics": "^7.0.0",
     "@nestjs/testing": "^7.0.0",
+    "@nestjs/typeorm": "^7.1.4",
     "@types/express": "^4.17.3",
     "@types/jest": "26.0.14",
     "@types/node": "^14.11.8",
     "@types/supertest": "^2.0.8",
+    "apollo-server-express": "^2.18.2",
     "graphql": "14.6.0",
     "jest": "26.5.2",
     "prettier": "^2.1.2",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.5.4",
+    "sqlite3": "^5.0.0",
     "supertest": "^5.0.0",
     "ts-jest": "26.4.1",
     "ts-loader": "^8.0.4",
     "ts-node": "9.0.0",
     "tsconfig-paths": "^3.9.0",
+    "typeorm": "^0.2.28",
     "typescript": "^3.8.3"
   },
   "types": "dist/index.d.ts",
   "jest": {
-    "rootDir": "src",
     "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
+      "^.+\\.tsx?$": "ts-jest"
     },
-    "testEnvironment": "node"
+    "collectCoverage": true,
+    "globals": {
+      "ts-jest": {
+        "diagnostics": {
+          "warnOnly": true
+        }
+      }
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.ts$",
+    "collectCoverageFrom": [
+      "src/index.ts"
+    ]
   }
 }
