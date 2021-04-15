@@ -7,7 +7,7 @@ import {
   NestInterceptor,
 } from "@nestjs/common";
 import { APP_INTERCEPTOR, ContextIdFactory, ModuleRef } from "@nestjs/core";
-import { GqlExecutionContext } from "@nestjs/graphql";
+import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
 import DataLoader from "dataloader";
 import { Observable } from "rxjs";
 
@@ -41,16 +41,19 @@ export class DataLoaderInterceptor implements NestInterceptor {
     context: ExecutionContext,
     next: CallHandler
   ): Observable<any> {
+    if (context.getType<GqlContextType>() !== "graphql") {
+      return next.handle();
+    }
+
     const ctx = GqlExecutionContext.create(context).getContext();
-    if (!ctx) return next.handle();
 
     if (ctx[NEST_LOADER_CONTEXT_KEY] === undefined) {
       ctx[NEST_LOADER_CONTEXT_KEY] = {
         contextId: ContextIdFactory.create(),
         getLoader: (type: string): Promise<NestDataLoader<any, any>> => {
           if (ctx[type] === undefined) {
-            try {
-              ctx[type] = (async () => {
+            ctx[type] = (async () => {
+              try {
                 return (
                   await this.moduleRef.resolve<NestDataLoader<any, any>>(
                     type,
@@ -58,12 +61,12 @@ export class DataLoaderInterceptor implements NestInterceptor {
                     { strict: false }
                   )
                 ).generateDataLoader();
-              })();
-            } catch (e) {
-              throw new InternalServerErrorException(
-                `The loader ${type} is not provided` + e
-              );
-            }
+              } catch (e) {
+                throw new InternalServerErrorException(
+                  `The loader ${type} is not provided` + e
+                );
+              }
+            })();
           }
           return ctx[type];
         },
@@ -83,6 +86,12 @@ export const Loader = createParamDecorator(
     if (!name) {
       throw new InternalServerErrorException(
         `Invalid name provider to @Loader ('${name}')`
+      );
+    }
+
+    if (context.getType<GqlContextType>() !== "graphql") {
+      throw new InternalServerErrorException(
+        "@Loader should only be used within the GraphQL context"
       );
     }
 
