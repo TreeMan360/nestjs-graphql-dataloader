@@ -52,8 +52,8 @@ export class DataLoaderInterceptor implements NestInterceptor {
         contextId: ContextIdFactory.create(),
         getLoader: (type: string): Promise<NestDataLoader<any, any>> => {
           if (ctx[type] === undefined) {
-            try {
-              ctx[type] = (async () => {
+            ctx[type] = (async () => {
+              try {
                 return (
                   await this.moduleRef.resolve<NestDataLoader<any, any>>(
                     type,
@@ -61,12 +61,12 @@ export class DataLoaderInterceptor implements NestInterceptor {
                     { strict: false }
                   )
                 ).generateDataLoader();
-              })();
-            } catch (e) {
-              throw new InternalServerErrorException(
-                `The loader ${type} is not provided` + e
-              );
-            }
+              } catch (e) {
+                throw new InternalServerErrorException(
+                  `The loader ${type} is not provided` + e
+                );
+              }
+            })();
           }
           return ctx[type];
         },
